@@ -15,3 +15,5 @@ In order to deploy you will need:
 - `npm install beamup-cli -g`
 - go to the project directory that you want to deploy
 - `beamup`
+
+(for more specific commands, use `beamup --help`)
