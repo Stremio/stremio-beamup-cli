@@ -1,6 +1,6 @@
 # Beam Up CLI
 
-CLI for deploying to [Beam Up](https://github.com/Stremio/stremio-beamup) servers.
+CLI for deploying to Beam Up servers.
 
 ## Prerequisites
 
