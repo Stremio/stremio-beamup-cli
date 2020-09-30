@@ -12,6 +12,6 @@ In order to deploy you will need:
 ## Usage
 
 - open a terminal
-- `npm install beamup -g`
+- `npm install beamup-cli -g`
 - go to the project directory that you want to deploy
 - `beamup`

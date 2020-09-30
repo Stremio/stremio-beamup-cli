@@ -1,7 +1,9 @@
 {
-  "name": "beamup",
+  "name": "beamup-cli",
   "version": "1.0.0",
-  "bin": "./bin/index.js",
+  "bin": {
+    "beamup": "./bin/index.js"
+  },
   "scripts": {
     "start": "node ./bin/index.js"
   },
