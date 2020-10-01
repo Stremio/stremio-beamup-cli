@@ -27,6 +27,7 @@ In order to deploy you will need:
 - your project repo must suppport one of the Heroku buildpacks or must have a `Dockerfile`; with Nodejs, simply having a `package.json` in the repo should be sufficient
 - it's based on [Dokku](http://dokku.viewdocs.io/dokku/), so whatever you can deploy there you can also deploy on Beam Up (it's using the same build system); however, some features are not supported such as custom NGINX config
 - currently only projects using Dokku 'Herokuish' buildpack are supported; an ugly workaround to deploy a project built with Dokku 'Dockerfile' buildpack is to include 'docker' in the project name
+- the Node.js dependency can be avoided by downloading a prebuilt version of `beamup-cli` from the [releases page](https://github.com/Stremio/stremio-beamup-cli/releases/)
 
 
 **Built by the Stremio Team**
