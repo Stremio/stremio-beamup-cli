@@ -31,4 +31,4 @@ In order to deploy you will need:
 
 **Built by the Stremio Team**
 
-![Stremio](https://www.stremio.com/website/stremio-purple-small.png)
+[![Stremio](https://www.stremio.com/website/stremio-purple-small.png)](https://stremio.com/)
