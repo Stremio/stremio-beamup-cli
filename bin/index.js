@@ -1,3 +1,6 @@
+#!/usr/bin/env node
+
+'use strict'
 
 const utils = require('../lib/utils')
 const config = require('../lib/config')
