@@ -5,7 +5,8 @@
     "beamup": "./bin/index.js"
   },
   "scripts": {
-    "start": "node ./bin/index.js"
+    "start": "node ./bin/index.js",
+    "build": "pkg ./bin/index.js --out-path build/ --targets linux-x64,macos-x64,win-x64,linux-x86,macos-x86,win-x86"
   },
   "repository": {
     "type": "git",
@@ -21,6 +22,9 @@
     "url": "https://github.com/Stremio/stremio-beamup-cli/issues"
   },
   "homepage": "https://github.com/Stremio/stremio-beamup-cli",
+  "devDependencies": {
+    "pkg": "4.3.8"
+  },
   "dependencies": {
     "async-file": "2.0.2",
     "commander": "6.1.0",
