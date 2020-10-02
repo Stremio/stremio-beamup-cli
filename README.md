@@ -24,6 +24,7 @@ In order to deploy you will need:
 ### Good to Know
 
 - you can use `git push beamup master` to update your projects as well
+- your project must support using the `PORT` process environment variable (if available) as the http server port
 - your project repo must suppport one of the Heroku buildpacks or must have a `Dockerfile`; with Nodejs, simply having a `package.json` in the repo should be sufficient
 - it's based on [Dokku](http://dokku.viewdocs.io/dokku/), so whatever you can deploy there you can also deploy on Beam Up (it's using the same build system); however, some features are not supported such as custom NGINX config
 - currently only projects using Dokku 'Herokuish' buildpack are supported; an ugly workaround to deploy a project built with Dokku 'Dockerfile' buildpack is to include 'docker' in the project name
