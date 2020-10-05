@@ -21,6 +21,8 @@ In order to deploy you will need:
 
 (for more specific commands, use `beamup --help`)
 
+The `beamup` command is a universal command, it will handle both initial setup and deploying projects.
+
 ### Good to Know
 
 - you can use `git push beamup master` to update your projects as well
