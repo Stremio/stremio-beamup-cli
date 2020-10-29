@@ -25,6 +25,7 @@ The `beamup` command is a universal command, it will handle both initial setup a
 
 ### Good to Know
 
+- we have a [FAQ](https://github.com/Stremio/stremio-beamup-cli/wiki/FAQ) that might help with some quick answers
 - you can use `git push beamup master` to update your projects as well
 - your project must support using the `PORT` process environment variable (if available) as the http server port
 - your project repo must suppport one of the Heroku buildpacks or must have a `Dockerfile`; with Nodejs, simply having a `package.json` in the repo should be sufficient
