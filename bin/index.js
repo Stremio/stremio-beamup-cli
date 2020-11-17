@@ -28,6 +28,22 @@ const commands = {
 		await deploy(opts)
 		process.exit(0)
 	},
+	secrets: async (options) => {
+		const args = options.args || []
+		const globalOpts = await config.global()
+		const projectOpts = await config.project(globalOpts)
+		const opts = Object.assign({}, globalOpts, projectOpts)
+		try {
+			await ssh.addSecret(opts, {
+				name: args[0],
+				value: args[1],
+			})
+			console.log('Added secret "'+args[0]+'" to project')
+		} catch(e) {
+			console.log('An error occured while adding the secret to the project.')
+		}
+		process.exit(0)
+	},
 	default: async (options) => {
 		if (!(options.args || []).length) {
 			const globalOpts = await config.global()
@@ -65,6 +81,12 @@ program
 program
   .command('deploy')
   .description('deploys the project, the same can be achieved with "git push beamup master"')
+  .action(commands.deploy)
+
+program
+  .command('secrets')
+  .option('<secret-name> <secret-value>')
+  .description('adds secrets to the project as environment variables')
   .action(commands.deploy)
 
 program

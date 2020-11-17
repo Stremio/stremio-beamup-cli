@@ -23,6 +23,14 @@ In order to deploy you will need:
 
 The `beamup` command is a universal command, it will handle both initial setup and deploying projects.
 
+## Secrets
+
+You can add secrets to your project in the form of environment variables
+
+```
+beamup secrets <secret-name> <secret-value>
+```
+
 ### Good to Know
 
 - we have a [FAQ](https://github.com/Stremio/stremio-beamup-cli/wiki/FAQ) that might help with some quick answers
