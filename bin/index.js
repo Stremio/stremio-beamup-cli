@@ -46,7 +46,6 @@ const commands = {
 						await git(['commit', '-m', 'Auto-commit'])
 					} else {
 						console.log('Warning: You have chosen to deploy a project where the commit history did not change, deploying the project may fail in this case.')
-						await utils.anyKeyToContinue()
 					}
 
 				}
