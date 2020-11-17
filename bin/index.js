@@ -83,7 +83,7 @@ const commands = {
 			const globalOpts = await config.global()
 			const projectOpts = await config.project(globalOpts)
 			const opts = Object.assign({}, globalOpts, projectOpts)
-			console.log('Deployed to ' + utils.projectDomain(opts))
+			console.log('Project URL: ' + utils.projectDomain(opts))
 			try {
 				await deploy(opts)
 				console.log('Deployed to ' + utils.projectDomain(opts))
