@@ -52,7 +52,7 @@ const commands = {
 			}
 		}
 		await deploy(opts)
-		await config.saveLastCommit()
+		await config.saveLastCommit(opts)
 		process.exit(0)
 	},
 	secrets: async (options) => {
