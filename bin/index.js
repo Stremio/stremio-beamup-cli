@@ -6,6 +6,8 @@ const utils = require('../lib/utils')
 const config = require('../lib/config')
 const deploy = require('../lib/deploy')
 const ssh = require('../lib/ssh')
+const git = require('../lib/git')
+const lastCommit = require('../lib/lastCommit')
 
 const commands = {
 	config: async (options) => {
@@ -25,7 +27,32 @@ const commands = {
 		const globalOpts = await config.global()
 		const projectOpts = await config.project(globalOpts)
 		const opts = Object.assign({}, globalOpts, projectOpts)
+		if (projectOpts.lastCommit) {
+			const commitHash = lastCommit()
+			if (commitHash) {
+				if (projectOpts.lastCommit == commitHash) {
+					// last commit hash did not change
+					// ask if we should auto-commit changes
+					const readline = utils.readline()
+
+					const val = await readline.question('The commit history did not change since the last deployment, would you like to create a new commit for your project? (y/n): ')
+
+					if (['y','yes'].includes(val.toLowerCase())) {
+						console.log('Creating a new commit with the title "Auto-commit"')
+
+						await readline.close()
+
+						await git(['add', '--all'])
+						await git(['commit', '-m', 'Auto-commit'])
+					} else {
+						console.log('Warning: You have chosen to deploy a project where the commit history did not change, deploying the project may fail in this case.')
+					}
+
+				}
+			}
+		}
 		await deploy(opts)
+		await config.saveLastCommit()
 		process.exit(0)
 	},
 	secrets: async (options) => {
