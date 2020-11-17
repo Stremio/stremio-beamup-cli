@@ -37,10 +37,10 @@ const commands = {
 
 					const val = await readline.question('The commit history did not change since the last deployment, would you like to create a new commit for your project? (y/n): ')
 
+					await readline.close()
+
 					if (['y','yes'].includes(val.toLowerCase())) {
 						console.log('Creating a new commit with the title "Auto-commit"')
-
-						await readline.close()
 
 						await git(['add', '--all'])
 						await git(['commit', '-m', 'Auto-commit'])
