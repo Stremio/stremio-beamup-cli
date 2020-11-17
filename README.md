@@ -16,14 +16,16 @@ In order to deploy you will need:
 
 ## Usage
 
+### Deploying
+
 - go to the project directory that you want to deploy
 - use the `beamup` command
 
 (for more specific commands, use `beamup --help`)
 
-The `beamup` command is a universal command, it will handle both initial setup and deploying projects.
+The `beamup` command is a universal command, it will handle both initial setup and the deploying of projects.
 
-## Secrets
+### Secrets
 
 You can add secrets to your project in the form of environment variables
 
@@ -31,7 +33,7 @@ You can add secrets to your project in the form of environment variables
 beamup secrets <secret-name> <secret-value>
 ```
 
-## Logs
+### Logs
 
 You can view your project's logs by using:
 
@@ -39,7 +41,7 @@ You can view your project's logs by using:
 beamup logs
 ```
 
-### Good to Know
+#### Good to Know
 
 - we have a [FAQ](https://github.com/Stremio/stremio-beamup-cli/wiki/FAQ) that might help with some quick answers
 - you can use `git push beamup master` to update your projects as well
