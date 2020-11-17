@@ -51,7 +51,12 @@ const commands = {
 				}
 			}
 		}
-		await deploy(opts)
+		try {
+			await deploy(opts)
+			console.log('Project URL: ' + utils.projectDomain(opts))
+		} catch(e) {
+			console.log('An error occured while deploying the project.')
+		}
 		await config.saveLastCommit(opts)
 		process.exit(0)
 	},
@@ -79,19 +84,9 @@ const commands = {
 		process.exit(0)
 	},
 	default: async (options) => {
-		if (!(options.args || []).length) {
-			const globalOpts = await config.global()
-			const projectOpts = await config.project(globalOpts)
-			const opts = Object.assign({}, globalOpts, projectOpts)
-			console.log('Project URL: ' + utils.projectDomain(opts))
-			try {
-				await deploy(opts)
-				console.log('Deployed to ' + utils.projectDomain(opts))
-			} catch(e) {
-				console.log('An error occured while deploying the project.')
-			}
-			process.exit(0)
-		} else
+		if (!(options.args || []).length)
+			commands.deploy()
+		else
 			program.outputHelp(() => { process.exit(1) })
 	}
 }
