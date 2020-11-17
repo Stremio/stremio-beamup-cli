@@ -28,8 +28,8 @@ const commands = {
 		const projectOpts = await config.project(globalOpts)
 		const opts = Object.assign({}, globalOpts, projectOpts)
 		if (projectOpts.lastCommit) {
-			const commitHash = lastCommit()
-			if (commitHash) {
+			const commitHash = await lastCommit()
+			if (commitHash && utils.isString(commitHash)) {
 				if (projectOpts.lastCommit == commitHash) {
 					// last commit hash did not change
 					// ask if we should auto-commit changes
