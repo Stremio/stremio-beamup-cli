@@ -31,6 +31,14 @@ You can add secrets to your project in the form of environment variables
 beamup secrets <secret-name> <secret-value>
 ```
 
+## Logs
+
+You can view your project's logs by using:
+
+```
+beamup logs
+```
+
 ### Good to Know
 
 - we have a [FAQ](https://github.com/Stremio/stremio-beamup-cli/wiki/FAQ) that might help with some quick answers

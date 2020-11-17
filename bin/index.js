@@ -44,6 +44,13 @@ const commands = {
 		}
 		process.exit(0)
 	},
+	logs: async () => {
+		const globalOpts = await config.global()
+		const projectOpts = await config.project(globalOpts)
+		const opts = Object.assign({}, globalOpts, projectOpts)
+		await ssh.showLogs(opts)
+		process.exit(0)
+	},
 	default: async (options) => {
 		if (!(options.args || []).length) {
 			const globalOpts = await config.global()
@@ -87,7 +94,12 @@ program
   .command('secrets')
   .option('<secret-name> <secret-value>')
   .description('adds secrets to the project as environment variables')
-  .action(commands.deploy)
+  .action(commands.secrets)
+
+program
+  .command('logs')
+  .description('view projects logs')
+  .action(commands.logs)
 
 program
   .description('Using "beamup" with no extra arguments, can be used to: configure a new installation, configure a new project, deploy')
