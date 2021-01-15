@@ -1,6 +1,6 @@
 {
   "name": "beamup-cli",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "bin": {
     "beamup": "./bin/index.js"
   },
