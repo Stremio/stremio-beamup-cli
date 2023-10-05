@@ -26,7 +26,7 @@ const commands = {
 	deploy: async () => {
 		const globalOpts = await config.global()
 		const projectOpts = await config.project(globalOpts)
-		const opts = Object.assign({}, globalOpts, projectOpts)
+		const opts = Object.assign({}, globalOpts, projectOpts, {hostLocal:projectOpts.host})
 		if (projectOpts.lastCommit) {
 			const commitHash = await lastCommit()
 			if (commitHash && utils.isString(commitHash)) {
