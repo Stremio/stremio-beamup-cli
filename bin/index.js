@@ -65,14 +65,27 @@ const commands = {
 		const globalOpts = await config.global()
 		const projectOpts = await config.project(globalOpts)
 		const opts = Object.assign({}, globalOpts, projectOpts)
-		try {
-			await ssh.addSecret(opts, {
-				name: args[0],
-				value: args[1],
-			})
-			console.log('Added secret "'+args[0]+'" to project')
-		} catch(e) {
-			console.log('An error occured while adding the secret to the project.')
+		if(args.length == 1){
+			try {
+				const exitCode = await ssh.getSecret(opts, args)
+				if(exitCode) 
+					console.log('the secret "'+args[0]+'" could not be found in project.')
+				else
+					console.log('Got secret "'+args[0]+'" from project.')
+			} catch(e) {
+				console.log('An error occured while getting the secret from the project.')
+			}
+
+		} else {
+			try {
+				await ssh.addSecret(opts, {
+					name: args[0],
+					value: args[1],
+				})
+				console.log('Added secret "'+args[0]+'" to project')
+			} catch(e) {
+				console.log('An error occured while adding the secret to the project.')
+			}
 		}
 		process.exit(0)
 	},
