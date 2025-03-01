@@ -25,6 +25,14 @@ In order to deploy you will need:
 
 The `beamup` command is a universal command, it will handle both initial setup and the deploying of projects.
 
+### Deleting
+
+You can completely delete your project using `delete` command
+
+```
+beamup delete
+```
+
 ### Secrets
 
 You can add secrets to your project in the form of environment variables
