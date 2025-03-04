@@ -1,0 +1,94 @@
+name: CD
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Cache System Dependencies
+        uses: actions/cache@v4
+        id: sys-cache
+        with:
+          path: |
+            /var/cache/apt/archives
+            /usr/bin/python3
+          key: cd-sys-deps-${{ hashFiles('.github/workflows/cd.yml') }}
+          restore-keys: |
+            cd-sys-deps-
+
+      - name: Install Python 3.10
+        if: steps.sys-cache.outputs.cache-hit != 'true'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y python3.10 python3-pip
+          sudo ln -s /usr/bin/python3.10 /usr/local/bin/python3
+
+      - name: Install Build Tools
+        if: steps.sys-cache.outputs.cache-hit != 'true'
+        run: |
+          sudo apt-get install -y build-essential gcc g++ make
+
+      - name: Cache Node Modules
+        uses: actions/cache@v4
+        id: node-cache
+        with:
+          path: |
+            ~/.npm
+            node_modules
+          key: cd-node14-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            cd-node14-${{ runner.os }}-
+
+      - name: Set Up Node.js 14
+        uses: actions/setup-node@v4
+        with:
+          node-version: 14
+          cache: 'npm'
+
+      - name: Install Dependencies
+        if: steps.node-cache.outputs.cache-hit != 'true'
+        run: npm ci
+
+      - name: Build Project
+        run: npm run build
+
+      - name: Upload Release Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-binaries
+          path: build/
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Get Package Version
+        id: get-version
+        run: echo "pkg_version=$(jq -r .version package.json)" >> $GITHUB_ENV
+
+      - name: Download Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: release-binaries
+          path: build/
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ env.pkg_version }}
+          name: Release v${{ env.pkg_version }}
+          generate_release_notes: true
+          draft: false
+          files: |
+            build/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

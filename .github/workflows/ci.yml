@@ -1,0 +1,66 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [master]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Cache System Dependencies
+        uses: actions/cache@v4
+        id: sys-cache
+        with:
+          path: |
+            /var/cache/apt/archives
+            /usr/bin/python3
+          key: ci-sys-deps-${{ hashFiles('.github/workflows/ci.yml') }}
+          restore-keys: |
+            ci-sys-deps-
+
+      - name: Install Python 3.10
+        if: steps.sys-cache.outputs.cache-hit != 'true'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y python3.10 python3-pip
+          sudo ln -s /usr/bin/python3.10 /usr/local/bin/python3
+
+      - name: Install Build Tools
+        if: steps.sys-cache.outputs.cache-hit != 'true'
+        run: |
+          sudo apt-get install -y build-essential gcc g++ make
+
+      - name: Cache Node Modules
+        uses: actions/cache@v4
+        id: node-cache
+        with:
+          path: |
+            ~/.npm
+            node_modules
+          key: ci-node14-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ci-node14-${{ runner.os }}-
+
+      - name: Set Up Node.js 14
+        uses: actions/setup-node@v4
+        with:
+          node-version: 14
+          cache: 'npm'
+
+      - name: Install Dependencies
+        if: steps.node-cache.outputs.cache-hit != 'true'
+        run: npm ci
+
+      - name: Build Project
+        run: npm run build
+
+      - name: Upload PR Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr-binaries-${{ github.event.pull_request.number }}
+          path: build/
+          retention-days: 17
