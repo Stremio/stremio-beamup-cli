@@ -1,0 +1,71 @@
+name: CD
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Cache Node Modules
+        uses: actions/cache@v4
+        id: node-cache
+        with:
+          path: |
+            C:\Users\runneradmin\AppData\Roaming\npm-cache
+            node_modules
+          key: cd-node14-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            cd-node14-${{ runner.os }}-
+
+      - name: Set Up Node.js 14
+        uses: actions/setup-node@v4
+        with:
+          node-version: 14
+          cache: 'npm'
+
+      - name: Install Dependencies
+        if: steps.node-cache.outputs.cache-hit != 'true'
+        run: npm ci
+
+      - name: Build Project
+        run: npm run build
+
+      - name: Upload Release Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-binaries
+          path: build/
+
+  release:
+    needs: build
+    runs-on: windows-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Get Package Version
+        id: get-version
+        run: echo "pkg_version=$(jq -r .version package.json)" >> $env:GITHUB_ENV
+
+      - name: Download Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: release-binaries
+          path: build/
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ env.pkg_version }}
+          name: Release v${{ env.pkg_version }}
+          generate_release_notes: true
+          draft: false
+          files: |
+            build/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

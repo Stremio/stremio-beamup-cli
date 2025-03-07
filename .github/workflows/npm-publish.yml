@@ -1,0 +1,66 @@
+# This workflow will build using node and then publish a package to GitHub Packages when a release is created
+# For more information see: https://docs.github.com/en/actions/publishing-packages/publishing-nodejs-packages
+
+name: Node.js Package
+
+on:
+  release:
+    types: [created]
+
+jobs:
+    build:
+        runs-on: windows-latest
+        steps:
+          - name: Checkout Code
+            uses: actions/checkout@v4
+    
+          - name: Cache Node Modules
+            uses: actions/cache@v4
+            id: node-cache
+            with:
+              path: |
+                C:\Users\runneradmin\AppData\Roaming\npm-cache
+                node_modules
+              key: cd-node14-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+              restore-keys: |
+                cd-node14-${{ runner.os }}-
+    
+          - name: Set Up Node.js 14
+            uses: actions/setup-node@v4
+            with:
+              node-version: 14
+              cache: 'npm'
+    
+          - name: Install Dependencies
+            if: steps.node-cache.outputs.cache-hit != 'true'
+            run: npm ci
+    
+          - name: Build Project
+            run: npm run build
+    
+          - name: Upload Release Artifacts
+            uses: actions/upload-artifact@v4
+            with:
+              name: publish-binaries
+              path: build/
+              
+    publish-npm:
+        needs: build
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout Code
+              uses: actions/checkout@v4
+            - name: Checkout Code
+              uses: actions/setup-node@v4
+              with:
+                node-version: 14
+                registry-url: https://registry.npmjs.org/
+            - name: Download Artifacts
+              uses: actions/download-artifact@v4
+              with:
+                  name: publish-binaries
+                  path: build/
+            - run: npm ci
+            - run: npm publish
+              env:
+                NODE_AUTH_TOKEN: ${{secrets.npm_token}}
