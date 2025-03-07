@@ -6,40 +6,17 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
-
-      - name: Cache System Dependencies
-        uses: actions/cache@v4
-        id: sys-cache
-        with:
-          path: |
-            /var/cache/apt/archives
-            /usr/bin/python3
-          key: cd-sys-deps-${{ hashFiles('.github/workflows/cd.yml') }}
-          restore-keys: |
-            cd-sys-deps-
-
-      - name: Install Python 3.10
-        if: steps.sys-cache.outputs.cache-hit != 'true'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y python3.10 python3-pip
-          sudo ln -s /usr/bin/python3.10 /usr/local/bin/python3
-
-      - name: Install Build Tools
-        if: steps.sys-cache.outputs.cache-hit != 'true'
-        run: |
-          sudo apt-get install -y build-essential gcc g++ make
 
       - name: Cache Node Modules
         uses: actions/cache@v4
         id: node-cache
         with:
           path: |
-            ~/.npm
+            C:\Users\runneradmin\AppData\Roaming\npm-cache
             node_modules
           key: cd-node14-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
           restore-keys: |
@@ -66,14 +43,14 @@ jobs:
 
   release:
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
       - name: Get Package Version
         id: get-version
-        run: echo "pkg_version=$(jq -r .version package.json)" >> $GITHUB_ENV
+        run: echo "pkg_version=$(jq -r .version package.json)" >> $env:GITHUB_ENV
 
       - name: Download Artifacts
         uses: actions/download-artifact@v4
