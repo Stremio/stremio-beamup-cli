@@ -88,6 +88,25 @@ const commands = {
 			commands.deploy()
 		else
 			program.outputHelp(() => { process.exit(1) })
+	},
+	delete: async () => {
+		const globalOpts = await config.global()
+		const projectOpts = await config.project(globalOpts)
+		const opts = Object.assign({}, globalOpts, projectOpts)
+
+		// ask if for confirmation
+		const readline = utils.readline()
+		const val = await readline.question('You are about to delete this project. This action cannot be undone. Do you want to continue? (y/n): ')
+
+		await readline.close()
+
+		if (['y', 'yes'].includes(val.toLowerCase())) {
+			await ssh.deleteAddon(opts)
+		} else {
+			console.log('Project deletion canceled by user.')
+		}
+
+		process.exit(0)
 	}
 }
 
@@ -122,6 +141,11 @@ program
   .command('logs')
   .description('view projects logs')
   .action(commands.logs)
+
+program
+  .command('delete')
+  .description('deletes the current project')
+  .action(commands.delete)
 
 program
   .description('Using "beamup" with no extra arguments, can be used to: configure a new installation, configure a new project, deploy')
